@@ -1,42 +1,12 @@
 <!doctype html>
 <html>
 <head>
-    <title>Langular Keep</title>
+    <title>Langular keep</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <style>
-        body {
-            padding-top: 30px;
-        }
-
-        form {
-            padding-bottom: 20px;
-        }
-
-        .note {
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
-        }
-
-        .note h3{
-            margin-top: 0;
-        }
-
-        .ng-dirty.ng-invalid {
-            border-color: red !important;
-        }
-
-        .ng-dirty.ng-valid {
-            border-color: green !important;
-        }
-
-        *:focus{
-            outline: none !important;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/app.css">
 
     <!-- JS -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>

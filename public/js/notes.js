@@ -7,17 +7,8 @@ angular.module('notes', [])
 
             save: function (noteData) {
                 return $http({
-                    method: 'POST',
-                    url: '/api/notes',
-                    data: noteData,
-                    paramSerializer: '$httpParamSerializerJQLike'
-                });
-            },
-
-            update: function (noteData) {
-                return $http({
-                    method: 'PUT',
-                    url: '/api/notes/' + noteData.id,
+                    method: noteData.id ? 'PUT' : 'POST',
+                    url: '/api/notes' + (noteData.id ? '/'+noteData.id : ''),
                     data: noteData,
                     paramSerializer: '$httpParamSerializerJQLike'
                 });
@@ -50,34 +41,17 @@ angular.module('notes', [])
 
             $scope.loading = true;
 
-            if ($scope.noteData.id) {
-                Note.update($scope.noteData)
-                    .success(function (data) {
+            Note.save($scope.noteData)
+                .success(function (data) {
+                    $scope.noteData = {};
+                    $scope.noteForm.$setPristine();
 
-                        $scope.noteData = {};
-                        $scope.noteForm.$setPristine();
-
-                        Note.get()
-                            .success(function (getData) {
-                                $scope.notes = getData;
-                                $scope.loading = false;
-                            });
-                    });
-            } else {
-                Note.save($scope.noteData)
-                    .success(function (data) {
-
-                        $scope.noteData = {};
-                        $scope.noteForm.$setPristine();
-
-                        Note.get()
-                            .success(function (getData) {
-                                $scope.notes = getData;
-                                $scope.loading = false;
-                            });
-
-                    });
-            }
+                    Note.get()
+                        .success(function (getData) {
+                            $scope.notes = getData;
+                            $scope.loading = false;
+                        });
+                });
 
         };
 
