@@ -4,54 +4,114 @@
     <title>Langular keep</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <!--    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/angular.css">
+    <link rel="stylesheet" href="/css/icons/material-icons.css">
     <link rel="stylesheet" href="/css/app.css">
 
     <!-- JS -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
+    <!--    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>-->
+    <script src="/js/angular.js"></script>
     <script src="/js/notes.js"></script>
 </head>
-<body class="container" ng-app="notes" ng-controller="notesController">
-<div class="col-md-8 col-md-offset-2">
+<body ng-app="notes" ng-controller="notesController" md-theme="default">
 
-    <div class="page-header">
-        <h2>Langular keep</h2>
+<div style="display: none;">
+    <div class="md-dialog-container" id="createNoteDialog">
+        <md-dialog layout-padding flex="50">
+            <md-dialog-content>
+
+                <form name="noteForm" ng-submit="submitNote()" novalidate>
+                    <md-input-container class="md-block">
+                        <label>Title</label>
+                        <input name="title" ng-model="note.title" autocomplete="off" required>
+                    </md-input-container>
+
+
+                    <md-input-container class="md-block">
+                        <label>Description</label>
+                        <textarea name="description" ng-model="note.description" autocomplete="off"></textarea>
+                    </md-input-container>
+                    <md-button type="submit" class="md-primary md-raised">Submit</md-button>
+                </form>
+
+            </md-dialog-content>
+        </md-dialog>
     </div>
+</div>
 
-    <form name="noteForm" ng-submit="submitNote()" novalidate>
-        <div class="form-group">
-            <input type="text" class="form-control input-lg" ng-class="{'ng-dirty': alert}" name="title" ng-model="noteData.title" placeholder="Title"
-                   required>
+<div layout="column" layout-fill>
+    <md-toolbar>
+
+        <div class="md-toolbar-tools">
+            <h2 md-truncate flex>Langular keep</h2>
         </div>
 
-        <div class="form-group">
-            <textarea class="form-control input-sm" name="description" ng-model="noteData.description"
-                      placeholder="Say what you have to say" rows="8"></textarea>
-        </div>
+    </md-toolbar>
 
-        <div class="form-group text-right">
-            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-        </div>
+    <div flex layout="row">
 
-    </form>
+        <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')">
 
-    <p class="text-center" ng-show="loading"><span class="fa fa-spinner fa-2x fa-spin"></span></p>
+            <md-menu-item>
+                <md-button>
+                    <md-icon class="material-icons">note</md-icon>
+                    Notes
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-click="createNote()">
+                    <md-icon class="material-icons">create</md-icon>
+                    New note
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button>
+                    <md-icon class="material-icons">archive</md-icon>
+                    Archie
+                </md-button>
+            </md-menu-item>
 
-    <div ng-hide="loading">
-        <div ng-show="notes.length==0" class="text-muted text-center">There are no notes yet...</div>
-        <div class="note" ng-repeat="note in notes">
-            <h3>
-                {{ note.title }}
-                <small class="pull-right">Note #{{ note.id }}</small>
-            </h3>
-            <p>{{ note.description }}</p>
-            <hr>
-            <a href="#" ng-click="editNote(note)" class="text-muted">Edit</a> |
-            <a href="#" ng-click="deleteNote(note.id)" class="text-muted">Delete</a>
-        </div>
+        </md-sidenav>
+
+        <md-button class="md-fab md-fab-bottom-right" ng-click="createNote($event)">
+            <md-icon class="material-icons">add</md-icon>
+        </md-button>
+
+        <md-content id="content" flex layout-padding>
+            <div class="flex-80">
+
+                <div ng-show="loading" layout="row" layout-align="center center">
+                    <md-progress-circular></md-progress-circular>
+                </div>
+
+                <div ng-hide="loading">
+                    <div ng-show="notes.length==0" class="text-muted text-center">There are no notes yet...</div>
+
+                    <md-card class="note" ng-repeat="note in notes">
+                        <md-card-content>
+                            <h2>
+                                {{ note.title }}
+                                <small class="pull-right text-muted">{{ note.date | relativeDate }}</small>
+                            </h2>
+                            <p>{{ note.description }}</p>
+                        </md-card-content>
+                        <md-card-actions layout="row" layout-align="end center">
+                            <md-button class="md-primary" ng-click="editNote(note)">Edit</md-button>
+                            <md-button class="md-primary" ng-click="deleteNote(note.id)">Delete</md-button>
+                        </md-card-actions>
+                    </md-card>
+
+                </div>
+
+            </div>
+
+        </md-content>
+
     </div>
 
 </div>
+
 </body>
 </html>

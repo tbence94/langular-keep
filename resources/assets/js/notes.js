@@ -1,15 +1,22 @@
-angular.module('notes', [])
+angular.module('notes', ['ngMaterial', 'relativeDate'])
+
+    .config(function ($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('amber')
+            .accentPalette('grey');
+    })
+
     .factory('Note', function ($http) {
         return {
             get: function () {
                 return $http.get('/api/notes');
             },
 
-            save: function (noteData) {
+            save: function (note) {
                 return $http({
-                    method: noteData.id ? 'PUT' : 'POST',
-                    url: '/api/notes' + (noteData.id ? '/'+noteData.id : ''),
-                    data: noteData,
+                    method: note.id ? 'PUT' : 'POST',
+                    url: '/api/notes' + (note.id ? '/' + note.id : ''),
+                    data: note,
                     paramSerializer: '$httpParamSerializerJQLike'
                 });
             },
@@ -19,38 +26,57 @@ angular.module('notes', [])
             }
         }
     })
-    .controller('notesController', function ($scope, $http, Note) {
-        $scope.noteData = {};
+
+    .controller('notesController', function ($scope, $http, $mdDialog, Note) {
+        $scope.note = {};
         $scope.loading = true;
 
+        var noteEditor = {
+            contentElement: '#createNoteDialog',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            escapeToClose: true
+        };
+
         Note.get()
-            .success(function (data) {
-                $scope.notes = data;
+            .then(function (response) {
+                $scope.notes = response.data;
                 $scope.loading = false;
             });
 
+
+        $scope.createNote = function () {
+            $mdDialog.show(noteEditor);
+            console.log("Hello");
+            console.log($scope.noteForm.title.$$element[0]);
+            A=$scope.noteForm.title.$$element[0];
+            console.log("World");
+        };
+
+
         $scope.editNote = function (note) {
-            $scope.noteData = note;
+            $scope.note = note;
+            $mdDialog.show(noteEditor);
         };
 
         $scope.submitNote = function () {
             if (!$scope.noteForm.$valid) {
-                $scope.alert = true;
                 return false;
             }
 
             $scope.loading = true;
 
-            Note.save($scope.noteData)
-                .success(function (data) {
-                    $scope.noteData = {};
+            Note.save($scope.note)
+                .then(function (response) {
+                    if (!$scope.note.id) {
+                        $scope.notes.unshift(response.data);
+                    }
+
+                    $scope.note = {};
                     $scope.noteForm.$setPristine();
 
-                    Note.get()
-                        .success(function (getData) {
-                            $scope.notes = getData;
-                            $scope.loading = false;
-                        });
+                    $mdDialog.cancel();
+                    $scope.loading = false;
                 });
 
         };
@@ -59,9 +85,14 @@ angular.module('notes', [])
             $scope.loading = true;
 
             Note.destroy(id)
-                .success(function (data) {
-                    $scope.notes = data;
+                .then(function () {
+                    $scope.notes = $scope.notes.filter(function (note) {
+                        return note.id !== id;
+                    });
                     $scope.loading = false;
+                })
+                .catch(function (response) {
+                    console.log(response);
                 });
         };
 

@@ -9,6 +9,7 @@ class NoteController extends Controller
 {
     public function index()
     {
+        usleep(800000);
         return Note::orderByDesc('created_at')->get();
     }
 
@@ -38,6 +39,6 @@ class NoteController extends Controller
     {
         $note = Note::findOrFail($id);
 
-        return $note->delete() ? $this->index() : response()->status(500);
+        return $note->delete() ? "" : response()->status(500);
     }
 }
