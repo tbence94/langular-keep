@@ -25,13 +25,13 @@
                 <form name="noteForm" ng-submit="submitNote()" novalidate>
                     <md-input-container class="md-block">
                         <label>Title</label>
-                        <input name="title" ng-model="note.title" autocomplete="off" required>
+                        <input name="title" ng-model="note.title" autocomplete="off" required show-focus="opened">
                     </md-input-container>
 
 
                     <md-input-container class="md-block">
                         <label>Description</label>
-                        <textarea name="description" ng-model="note.description" autocomplete="off"></textarea>
+                        <textarea name="description" ng-model="note.description" autocomplete="off" ng-keyup="handleEnter($event)"></textarea>
                     </md-input-container>
                     <md-button type="submit" class="md-primary md-raised">Submit</md-button>
                 </form>
@@ -90,7 +90,7 @@
                     <div ng-show="notes.length==0" class="text-muted text-center">There are no notes yet...</div>
 
                     <md-card class="note" ng-repeat="note in notes">
-                        <md-card-content>
+                        <md-card-content ng-click="editNote(note)">
                             <h2>
                                 {{ note.title }}
                                 <small class="pull-right text-muted">{{ note.date | relativeDate }}</small>

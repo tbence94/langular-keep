@@ -27,15 +27,32 @@ angular.module('notes', ['ngMaterial', 'relativeDate'])
         }
     })
 
-    .controller('notesController', function ($scope, $http, $mdDialog, Note) {
+    .directive('showFocus', function ($timeout) {
+        return function (scope, element, attrs) {
+            scope.$watch(attrs.showFocus,
+                function (newValue) {
+                    $timeout(function () {
+                        newValue && element[0].focus();
+                    });
+                }, true);
+        };
+    })
+
+    .controller('notesController', function ($scope, $http, $mdDialog, $timeout, Note) {
         $scope.note = {};
         $scope.loading = true;
+        $scope.opened = false;
 
         var noteEditor = {
             contentElement: '#createNoteDialog',
-            parent: angular.element(document.body),
             clickOutsideToClose: true,
-            escapeToClose: true
+            escapeToClose: true,
+            onComplete: function () {
+                $scope.opened = true;
+                $timeout(function () {
+                    $scope.opened = false;
+                }, 10);
+            }
         };
 
         Note.get()
@@ -47,16 +64,29 @@ angular.module('notes', ['ngMaterial', 'relativeDate'])
 
         $scope.createNote = function () {
             $mdDialog.show(noteEditor);
-            console.log("Hello");
-            console.log($scope.noteForm.title.$$element[0]);
-            A=$scope.noteForm.title.$$element[0];
-            console.log("World");
         };
-
 
         $scope.editNote = function (note) {
             $scope.note = note;
-            $mdDialog.show(noteEditor);
+            $mdDialog.show(noteEditor)
+                .then(function (response) {
+                    console.log("Then");
+                    console.log(response);
+                })
+                .catch(function (response) {
+                    console.log("Catch");
+                    console.log(response);
+                })
+                .finally(function (response) {
+                    console.log("Finally");
+                    console.log(response);
+                });
+        };
+
+        $scope.handleEnter = function (event) {
+            if (event.ctrlKey && event.keyCode == 13) {
+                $scope.submitNote();
+            }
         };
 
         $scope.submitNote = function () {
@@ -72,10 +102,13 @@ angular.module('notes', ['ngMaterial', 'relativeDate'])
                         $scope.notes.unshift(response.data);
                     }
 
-                    $scope.note = {};
-                    $scope.noteForm.$setPristine();
+                    $mdDialog.hide().then(function () {
+                        $scope.note = {};
+                        $scope.noteForm.$setPristine();
 
-                    $mdDialog.cancel();
+                        $scope.descriptionInput.blur();
+                    });
+
                     $scope.loading = false;
                 });
 
