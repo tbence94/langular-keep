@@ -3,6 +3,8 @@
 sudo ln -s /nginx.conf /etc/nginx/conf.d/langular-keep.conf
 sudo service nginx reload
 
+./composer.phar install
+
 #npm install -g gulp
 npm install
 gulp
