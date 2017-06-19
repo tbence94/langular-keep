@@ -39,6 +39,20 @@ class NoteController extends Controller
     {
         $note = Note::findOrFail($id);
 
+        return $note->forceDelete() ? "" : response()->status(500);
+    }
+
+    public function archive($id)
+    {
+        $note = Note::findOrFail($id);
+
         return $note->delete() ? "" : response()->status(500);
+    }
+
+    public function unarchive($id)
+    {
+        $note = Note::onlyTrashed()->findOrFail($id);
+
+        return $note->restore() ? "" : response()->status(500);
     }
 }

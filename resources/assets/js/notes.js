@@ -21,6 +21,14 @@ angular.module('notes', ['ngMaterial', 'relativeDate'])
                 });
             },
 
+            archive: function (id) {
+                return $http.put('/api/notes/' + id + '/archive');
+            },
+
+            unarchive: function (id) {
+                return $http.put('/api/notes/' + id + '/unarchive');
+            },
+
             destroy: function (id) {
                 return $http.delete('/api/notes/' + id);
             }
@@ -84,7 +92,7 @@ angular.module('notes', ['ngMaterial', 'relativeDate'])
         };
 
         $scope.handleEnter = function (event) {
-            if (event.ctrlKey && event.keyCode == 13) {
+            if (event.ctrlKey && event.keyCode === 13) {
                 $scope.submitNote();
             }
         };
@@ -105,13 +113,42 @@ angular.module('notes', ['ngMaterial', 'relativeDate'])
                     $mdDialog.hide().then(function () {
                         $scope.note = {};
                         $scope.noteForm.$setPristine();
-
-                        $scope.descriptionInput.blur();
                     });
 
                     $scope.loading = false;
                 });
 
+        };
+
+        $scope.archiveNote = function (id) {
+            $scope.loading = true;
+
+            Note.archive(id)
+                .then(function () {
+                    $scope.notes = $scope.notes.filter(function (note) {
+                        return note.id !== id;
+                    });
+                    $scope.loading = false;
+                })
+                .catch(function (response) {
+                    console.log(response);
+                });
+        };
+
+
+        $scope.unarchiveNote = function (id) {
+            $scope.loading = true;
+
+            Note.unarchive(id)
+                .then(function () {
+                    $scope.notes = $scope.notes.filter(function (note) {
+                        return note.id !== id;
+                    });
+                    $scope.loading = false;
+                })
+                .catch(function (response) {
+                    console.log(response);
+                });
         };
 
         $scope.deleteNote = function (id) {

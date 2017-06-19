@@ -25,5 +25,7 @@ $app->group(['prefix' => 'api'], function () use ($app) {
     $app->post('/notes', 'NoteController@store');
     $app->get('/notes/{id}', 'NoteController@show');
     $app->put('/notes/{id}', 'NoteController@update');
+    $app->put('/notes/{id}/archive', 'NoteController@archive');
+    $app->put('/notes/{id}/unarchive', 'NoteController@unarchive');
     $app->delete('/notes/{id}', 'NoteController@destroy');
 });
