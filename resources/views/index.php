@@ -5,7 +5,6 @@
     <base href="/">
     <!-- CSS -->
     <!--    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">-->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/angular.css">
     <link rel="stylesheet" href="/css/icons/material-icons.css">
     <link rel="stylesheet" href="/css/app.css">
