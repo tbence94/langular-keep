@@ -11,21 +11,27 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return view('index');
-});
-$app->get('/editor', function () use ($app) {
-    return view('editor');
-});
 /**
  * Notes
  */
 $app->group(['prefix' => 'api'], function () use ($app) {
     $app->get('/notes', 'NoteController@index');
+    $app->get('/notes/archived', 'NoteController@archived');
     $app->post('/notes', 'NoteController@store');
     $app->get('/notes/{id}', 'NoteController@show');
     $app->put('/notes/{id}', 'NoteController@update');
     $app->put('/notes/{id}/archive', 'NoteController@archive');
     $app->put('/notes/{id}/unarchive', 'NoteController@unarchive');
+    $app->delete('/notes/archived', 'NoteController@clearArchive');
     $app->delete('/notes/{id}', 'NoteController@destroy');
+});
+
+/*
+ * Views
+ */
+$app->get('/view/[{view:[A-Za-z0-9\._\-\/]+}]', function ($view) {
+    return view($view);
+});
+$app->get('/[{view:[A-Za-z0-9\._\-\/]+}]', function () {
+    return view('index');
 });

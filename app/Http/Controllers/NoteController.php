@@ -9,8 +9,14 @@ class NoteController extends Controller
 {
     public function index()
     {
-        usleep(800000);
+//        usleep(800000);
         return Note::orderByDesc('created_at')->get();
+    }
+
+    public function archived()
+    {
+//        usleep(1000000);
+        return Note::onlyTrashed()->orderByDesc('deleted_at')->get();
     }
 
     public function store(Request $request)
@@ -54,5 +60,12 @@ class NoteController extends Controller
         $note = Note::onlyTrashed()->findOrFail($id);
 
         return $note->restore() ? "" : response()->status(500);
+    }
+
+    public function clearArchive()
+    {
+        $archivedNotes = Note::onlyTrashed()->get();
+
+        return $archivedNotes->each->forceDelete() ? "" : response()->status(500);
     }
 }

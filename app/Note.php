@@ -11,10 +11,20 @@ class Note extends Model
 
     protected $fillable = ['title', 'description'];
 
-    protected $appends = ['date'];
+    protected $appends = ['date', 'archived'];
 
     public function getDateAttribute()
     {
         return strtotime($this->created_at) * 1000;
+    }
+
+
+    public function getArchivedAttribute()
+    {
+        if (!$this->deleted_at) {
+            return false;
+        }
+
+        return strtotime($this->deleted_at) * 1000;
     }
 }
