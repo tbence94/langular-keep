@@ -1,27 +1,11 @@
 angular.module('settings', [])
 
-    .constant('palette', [
-        'red',
-        'pink',
-        'purple',
-        'deep-purple',
-        'indigo',
-        'blue',
-        'light-blue',
-        'cyan',
-        'teal',
-        'green',
-        'light-green',
-        'lime',
-        'yellow',
-        'amber',
-        'orange',
-        'deep-orange',
-        'brown',
-        'grey',
-        'blue-grey'
-    ])
-
-    .controller('settingsController', function ($scope, palette, $mdThemingProvider) {
+    .controller('settingsController', function ($rootScope, $scope, themes) {
+        $scope.themes = Object.keys(themes);
+        $scope.theme = $rootScope.theme;
         $scope.stopLoading();
+
+        $scope.save = function(){
+          $rootScope.theme = $scope.theme;
+        };
     });

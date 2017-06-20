@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/app.css">
 
 </head>
-<body ng-app="keep" ng-controller="keepController" md-theme="default">
+<body ng-app="keep" ng-controller="keepController" md-theme="theme">
 
 <div layout="column" layout-fill>
 

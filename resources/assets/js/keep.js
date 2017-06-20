@@ -1,9 +1,41 @@
 angular.module('keep', ['notes', 'settings', 'ui.router', 'ngMaterial', 'relativeDate'])
 
-    .config(function ($mdThemingProvider) {
-        $mdThemingProvider.theme('default')
-            .primaryPalette('amber')
-            .accentPalette('grey');
+    .constant('themes', {
+        'default': {
+            primaryColor: 'amber',
+            accentColor: 'grey',
+            warnColor: 'red'
+        },
+        'yellow': {
+            primaryColor: 'yellow',
+            accentColor: 'orange',
+            warnColor: 'red'
+        },
+        'blue': {
+            primaryColor: 'blue',
+            accentColor: 'cyan',
+            warnColor: 'red'
+        },
+        'pink': {
+            primaryColor: 'pink',
+            accentColor: 'red',
+            warnColor: 'red'
+        }
+    })
+
+    .config(function ($mdThemingProvider, themes) {
+
+        for (var theme in themes) {
+            if (!themes.hasOwnProperty(theme)) continue;
+
+            $mdThemingProvider.theme(theme)
+                .primaryPalette(themes[theme].primaryColor)
+                .accentPalette(themes[theme].accentColor)
+                .accentPalette(themes[theme].warnColor);
+        }
+
+        $mdThemingProvider.alwaysWatchTheme(true);
+
     })
 
     .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
@@ -47,6 +79,8 @@ angular.module('keep', ['notes', 'settings', 'ui.router', 'ngMaterial', 'relativ
     })
 
     .run(function ($rootScope, $state) {
+
+        $rootScope.theme = 'default';
 
         // console.log($state);
         // $state.go('notes');
