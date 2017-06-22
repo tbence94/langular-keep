@@ -50,7 +50,7 @@ angular.module('notes', ['relativeDate'])
 
         // Initiazlie
         Note.get().then(function (response) {
-            $scope.notes = response.data;
+            NOTES = $scope.notes = response.data;
             $scope.stopLoading();
         });
 
@@ -60,14 +60,28 @@ angular.module('notes', ['relativeDate'])
         };
 
         $scope.editNote = function (note) {
+            original = JSON.parse(JSON.stringify(note));
             $scope.note = note;
-            $mdDialog.show(noteEditor);
+
+            $mdDialog.show(noteEditor).catch(function () {
+                note.title = original.title;
+                note.description = original.description;
+                $scope.note = {};
+                $scope.noteForm.$setPristine();
+            });
         };
 
         $scope.handleEnter = function (event) {
             if (event.ctrlKey && event.keyCode === 13) {
                 $scope.submitNote();
             }
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.hide().then(function () {
+                $scope.note = {};
+                $scope.noteForm.$setPristine();
+            });
         };
 
         $scope.submitNote = function () {
@@ -140,7 +154,6 @@ angular.module('notes', ['relativeDate'])
         };
 
         $scope.clearArchive = function () {
-
             $mdDialog.show($mdDialog.confirm({
                 title: 'Clear all archived notes',
                 textContent: 'Would you like to remove all archived notes? You can\'t undo this operation!',
@@ -161,8 +174,6 @@ angular.module('notes', ['relativeDate'])
                     });
                 });
             });
-
-
         };
 
     });

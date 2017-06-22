@@ -3,7 +3,7 @@
     <div ng-show="notes.length==0" class="text-muted text-center">There are no notes yet...</div>
 
     <md-card class="note" ng-repeat="note in notes">
-        <md-card-content ng-click="editNote(note)">
+        <md-card-content ng-click="editNote(note)" style="overflow: hidden;">
             <h2> {{ note.title }}
                 <small class="pull-right text-muted">{{ note.date | relativeDate }}</small>
             </h2>
@@ -34,6 +34,7 @@
             <md-dialog-content>
 
                 <form name="noteForm" ng-submit="submitNote()" novalidate>
+
                     <md-input-container class="md-block">
                         <label for="noteTitle">Title</label>
                         <input id="noteTitle" name="title" ng-model="note.title" autocomplete="off" required show-focus="opened">
@@ -42,9 +43,14 @@
 
                     <md-input-container class="md-block">
                         <label for="noteDescription">Description</label>
-                        <textarea id="noteDescription" name="description" ng-model="note.description" autocomplete="off" ng-keyup="handleEnter($event)"></textarea>
+                        <textarea id="noteDescription" name="description" rows="3" ng-model="note.description" autocomplete="off" ng-keyup="handleEnter($event)"></textarea>
                     </md-input-container>
-                    <md-button type="submit" class="md-primary md-raised">Submit</md-button>
+
+                    <div layout="row" layout-align="end center">
+                        <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+                        <md-button type="submit" class="md-primary md-raised">Submit</md-button>
+                    </div>
+
                 </form>
 
             </md-dialog-content>
